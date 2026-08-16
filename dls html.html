@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DLS 26 League Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>⚽ DLS 26 League Manager</h1>
+        <p>Dream League Soccer 2026 Results & League Tables</p>
+        <p>TRIXARQ</p>
+    </header>
+
+    <div class="container">
+
+        <!-- ADMIN BUTTON -->
+        <div class="admin-bar">
+            <button class="admin-btn" onclick="openAdminLogin()">
+                🔐 Admin
+            </button>
+        </div>
+
+        <!-- LEAGUE TABS -->
+        <div class="tabs" id="leagueTabs"></div>
+
+        <!-- MAIN PUBLIC DASHBOARD -->
+        <section id="dashboardSection">
+
+            <div class="stats">
+
+                <div class="stat">
+                    <strong id="teamCount">0</strong>
+                    <span>Teams</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="matchCount">0</strong>
+                    <span>Matches</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="leaderName">-</strong>
+                    <span>League Leader</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="leaderPoints">0</strong>
+                    <span>Leader Points</span>
+                </div>
+
+            </div>
+
+            <!-- STANDINGS -->
+            <div class="panel">
+
+                <h2>🏆 League Standings</h2>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>TEAM</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>GF</th>
+                                <th>GA</th>
+                                <th>GD</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="standingsBody"></tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+            <!-- RESULTS -->
+            <div class="panel">
+
+                <h2>📋 Match Results</h2>
+
+                <div id="resultsList"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ADMIN AREA
+        ================================================= -->
+
+        <section id="adminArea">
+
+            <div class="panel">
+
+                <div class="admin-heading">
+
+                    <div>
+                        <h2>🔐 Administrator Panel</h2>
+                        <span class="admin-status">
+                            Administrator access enabled
+                        </span>
+                    </div>
+
+                    <button class="danger" onclick="logoutAdmin()">
+                        🔒 Lock Admin
+                    </button>
+
+                </div>
+
+                <!-- CREATE LEAGUE -->
+
+                <div class="panel">
+
+                    <h2>➕ Create League</h2>
+
+                    <div class="form-grid">
+
+                        <input id="leagueName" type="text" placeholder="League name">
+
+                        <input id="leagueSeason" type="text" placeholder="Season e.g. Season 1">
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="primary" onclick="createLeague()">
+                            Create League
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADD TEAM -->
+
+                <div class="panel">
+
+                    <h2>👥 Add Team</h2>
+
+                    <div class="form-grid">
+
+                        <input id="teamName" type="text" placeholder="Team name">
+
+                        <input id="teamManager" type="text" placeholder="Manager / Player name">
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="success" onclick="addTeam()">
+                            Add Team
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ENTER RESULT -->
+
+                <div class="panel">
+
+                    <h2>⚽ Enter Match Result</h2>
+
+                    <div class="form-grid">
+
+                        <select id="homeTeam">
+                            <option value="">Home team</option>
+                        </select>
+
+                        <select id="awayTeam">
+                            <option value="">Away team</option>
+                        </select>
+
+                        <input id="homeScore" type="number" min="0" placeholder="Home score">
+
+                        <input id="awayScore" type="number" min="0" placeholder="Away score">
+
+                        <input id="matchDate" type="date">
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="primary" onclick="addResult()">
+                            Save Result
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CURRENT TEAMS -->
+
+                <div class="panel">
+
+                    <h2>⚙️ Current League Teams</h2>
+
+                    <div id="teamList"></div>
+
+                </div>
+
+
+                <!-- DATA MANAGEMENT -->
+
+                <div class="panel">
+
+                    <h2>🗑️ Data Management</h2>
+
+                    <p style="color:#8995b5;font-size:13px;">
+                        These actions affect all saved league data.
+                    </p>
+
+                    <div class="button-row">
+
+                        <button class="danger" onclick="deleteCurrentLeague()">
+                            Delete Current League
+                        </button>
+
+                        <button class="secondary" onclick="clearEverything()">
+                            Clear Everything
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- PASSWORD MODAL -->
+
+    <div class="modal" id="adminModal">
+
+        <div class="modal-box">
+
+            <h2>🔐 Admin Login</h2>
+
+            <p>
+                Enter the administrator password to manage leagues,
+                teams and results.
+            </p>
+
+            <input id="adminPassword" type="password" placeholder="Administrator password" onkeydown="if(event.key==='Enter') loginAdmin()">
+
+            <div class="password-error" id="passwordError">
+                Incorrect password. Please try again.
+            </div>
+
+            <div class="button-row">
+
+                <button class="primary" onclick="loginAdmin()">
+                    Login
+                </button>
+
+                <button class="close-modal" onclick="closeAdminLogin()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
