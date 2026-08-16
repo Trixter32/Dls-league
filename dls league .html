@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DLS 26 League Manager</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #0b1020;
+    color: #fff;
+    min-height: 100vh;
+}
+
+header {
+    background: linear-gradient(135deg, #101a3a, #17265a);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #26376d;
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+header p {
+    color: #aeb9dc;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* ADMIN BUTTON */
+
+.admin-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.admin-btn {
+    background: #1e293b;
+    color: #fff;
+    border: 1px solid #475569;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.admin-btn:hover {
+    background: #334155;
+}
+
+/* LEAGUE TABS */
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.tab {
+    background: #151d36;
+    color: #b8c2df;
+    border: 1px solid #293558;
+    padding: 11px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tab.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+/* PANELS */
+
+.panel {
+    background: #121a30;
+    border: 1px solid #253252;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.panel h2 {
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+/* DASHBOARD */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: #151e35;
+    border: 1px solid #293758;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+    font-size: 23px;
+    color: #60a5fa;
+    margin-bottom: 5px;
+}
+
+.stat span {
+    color: #8995b5;
+    font-size: 12px;
+}
+
+/* FORMS */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    background: #0b1020;
+    border: 1px solid #344266;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #3b82f6;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: .85;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.success {
+    background: #16a34a;
+    color: white;
+}
+
+.danger {
+    background: #dc2626;
+    color: white;
+}
+
+.secondary {
+    background: #374151;
+    color: white;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+/* TABLE */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 750px;
+}
+
+th {
+    background: #1d2947;
+    color: #aebce0;
+    font-size: 12px;
+    padding: 12px 8px;
+}
+
+td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #263452;
+    text-align: center;
+}
+
+td:nth-child(2) {
+    text-align: left;
+    font-weight: bold;
+}
+
+tr:hover {
+    background: #17223c;
+}
+
+.position {
+    font-weight: bold;
+    color: #60a5fa;
+}
+
+.champion {
+    color: #facc15;
+}
+
+/* RESULTS */
+
+.match {
+    background: #0d1428;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border-left: 4px solid #2563eb;
+}
+
+.match-top {
+    display: flex;
+    justify-content: space-between;
+    color: #8fa0c8;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.score {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* ADMIN AREA */
+
+#adminArea {
+    display: none;
+}
+
+.admin-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.admin-status {
+    color: #4ade80;
+    font-size: 13px;
+}
+
+.league-card {
+    background: #0d1428;
+    border: 1px solid #293758;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.league-card h3 {
+    color: #60a5fa;
+}
+
+.league-card small {
+    color: #9ca8c7;
+}
+
+.empty {
+    text-align: center;
+    color: #7784a5;
+    padding: 30px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* PASSWORD MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 380px;
+    background: #121a30;
+    border: 1px solid #33456e;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+.modal-box h2 {
+    margin-bottom: 8px;
+}
+
+.modal-box p {
+    color: #8d9abc;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.password-error {
+    color: #f87171;
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+}
+
+.close-modal {
+    background: #374151;
+    color: white;
+}
+
+@media (max-width: 700px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    .admin-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚽ DLS 26 League Manager</h1>
+    <p>Dream League Soccer 2026 Results & League Tables</p>
+    <p>TRIXARQ</p>
+</header>
+
+<div class="container">
+
+    <!-- ADMIN BUTTON -->
+    <div class="admin-bar">
+        <button class="admin-btn" onclick="openAdminLogin()">
+            🔐 Admin
+        </button>
+    </div>
+
+    <!-- LEAGUE TABS -->
+    <div class="tabs" id="leagueTabs"></div>
+
+    <!-- MAIN PUBLIC DASHBOARD -->
+    <section id="dashboardSection">
+
+        <div class="stats">
+
+            <div class="stat">
+                <strong id="teamCount">0</strong>
+                <span>Teams</span>
+            </div>
+
+            <div class="stat">
+                <strong id="matchCount">0</strong>
+                <span>Matches</span>
+            </div>
+
+            <div class="stat">
+                <strong id="leaderName">-</strong>
+                <span>League Leader</span>
+            </div>
+
+            <div class="stat">
+                <strong id="leaderPoints">0</strong>
+                <span>Leader Points</span>
+            </div>
+
+        </div>
+
+        <!-- STANDINGS -->
+        <div class="panel">
+
+            <h2>🏆 League Standings</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>TEAM</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>GD</th>
+                            <th>PTS</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="standingsBody"></tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="panel">
+
+            <h2>📋 Match Results</h2>
+
+            <div id="resultsList"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ADMIN AREA
+    ================================================= -->
+
+    <section id="adminArea">
+
+        <div class="panel">
+
+            <div class="admin-heading">
+
+                <div>
+                    <h2>🔐 Administrator Panel</h2>
+                    <span class="admin-status">
+                        Administrator access enabled
+                    </span>
+                </div>
+
+                <button
+                    class="danger"
+                    onclick="logoutAdmin()">
+                    🔒 Lock Admin
+                </button>
+
+            </div>
+
+            <!-- CREATE LEAGUE -->
+
+            <div class="panel">
+
+                <h2>➕ Create League</h2>
+
+                <div class="form-grid">
+
+                    <input
+                        id="leagueName"
+                        type="text"
+                        placeholder="League name">
+
+                    <input
+                        id="leagueSeason"
+                        type="text"
+                        placeholder="Season e.g. Season 1">
+
+                </div>
+
+                <div class="button-row">
+
+                    <button
+                        class="primary"
+                        onclick="createLeague()">
+                        Create League
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADD TEAM -->
+
+            <div class="panel">
+
+                <h2>👥 Add Team</h2>
+
+                <div class="form-grid">
+
+                    <input
+                        id="teamName"
+                        type="text"
+                        placeholder="Team name">
+
+                    <input
+                        id="teamManager"
+                        type="text"
+                        placeholder="Manager / Player name">
+
+                </div>
+
+                <div class="button-row">
+
+                    <button
+                        class="success"
+                        onclick="addTeam()">
+                        Add Team
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ENTER RESULT -->
+
+            <div class="panel">
+
+                <h2>⚽ Enter Match Result</h2>
+
+                <div class="form-grid">
+
+                    <select id="homeTeam">
+                        <option value="">Home team</option>
+                    </select>
+
+                    <select id="awayTeam">
+                        <option value="">Away team</option>
+                    </select>
+
+                    <input
+                        id="homeScore"
+                        type="number"
+                        min="0"
+                        placeholder="Home score">
+
+                    <input
+                        id="awayScore"
+                        type="number"
+                        min="0"
+                        placeholder="Away score">
+
+                    <input
+                        id="matchDate"
+                        type="date">
+
+                </div>
+
+                <div class="button-row">
+
+                    <button
+                        class="primary"
+                        onclick="addResult()">
+                        Save Result
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- CURRENT TEAMS -->
+
+            <div class="panel">
+
+                <h2>⚙️ Current League Teams</h2>
+
+                <div id="teamList"></div>
+
+            </div>
+
+
+            <!-- DATA MANAGEMENT -->
+
+            <div class="panel">
+
+                <h2>🗑️ Data Management</h2>
+
+                <p style="color:#8995b5;font-size:13px;">
+                    These actions affect all saved league data.
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        class="danger"
+                        onclick="deleteCurrentLeague()">
+                        Delete Current League
+                    </button>
+
+                    <button
+                        class="secondary"
+                        onclick="clearEverything()">
+                        Clear Everything
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- PASSWORD MODAL -->
+
+<div class="modal" id="adminModal">
+
+    <div class="modal-box">
+
+        <h2>🔐 Admin Login</h2>
+
+        <p>
+            Enter the administrator password to manage leagues,
+            teams and results.
+        </p>
+
+        <input
+            id="adminPassword"
+            type="password"
+            placeholder="Administrator password"
+            onkeydown="if(event.key==='Enter') loginAdmin()">
+
+        <div
+            class="password-error"
+            id="passwordError">
+            Incorrect password. Please try again.
+        </div>
+
+        <div class="button-row">
+
+            <button
+                class="primary"
+                onclick="loginAdmin()">
+                Login
+            </button>
+
+            <button
+                class="close-modal"
+                onclick="closeAdminLogin()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ADMIN PASSWORD
+========================================================= */
+
+/*
+    CHANGE THIS PASSWORD.
+
+    Example:
+    const ADMIN_PASSWORD = "DLS2026";
+*/
+
+const ADMIN_PASSWORD = "35786491";
+
+let adminLoggedIn = false;
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+let database =
+    JSON.parse(
+        localStorage.getItem("dls26_database")
+    ) || {
+        leagues: []
+    };
+
+let currentLeagueId = null;
+
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+function openAdminLogin() {
+
+    document.getElementById("adminModal").style.display =
+        "flex";
+
+    document.getElementById("adminPassword").value = "";
+
+    document.getElementById("passwordError").style.display =
+        "none";
+
+    setTimeout(() => {
+        document.getElementById("adminPassword").focus();
+    }, 100);
+}
+
+
+function closeAdminLogin() {
+
+    document.getElementById("adminModal").style.display =
+        "none";
+}
+
+
+function loginAdmin() {
+
+    const password =
+        document.getElementById("adminPassword").value;
+
+    if (password === ADMIN_PASSWORD) {
+
+        adminLoggedIn = true;
+
+        closeAdminLogin();
+
+        document.getElementById("adminArea").style.display =
+            "block";
+
+        render();
+
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+        });
+
+    } else {
+
+        document.getElementById("passwordError").style.display =
+            "block";
+
+        document.getElementById("adminPassword").value = "";
+
+        document.getElementById("adminPassword").focus();
+    }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logoutAdmin() {
+
+    adminLoggedIn = false;
+
+    document.getElementById("adminArea").style.display =
+        "none";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveDatabase() {
+
+    localStorage.setItem(
+        "dls26_database",
+        JSON.stringify(database)
+    );
+}
+
+
+/* =========================================================
+   GET CURRENT LEAGUE
+========================================================= */
+
+function getCurrentLeague() {
+
+    if (!database.leagues.length) {
+        return null;
+    }
+
+    if (!currentLeagueId) {
+        currentLeagueId =
+            database.leagues[0].id;
+    }
+
+    return database.leagues.find(
+        league => league.id === currentLeagueId
+    );
+}
+
+
+/* =========================================================
+   CREATE LEAGUE
+========================================================= */
+
+function createLeague() {
+
+    if (!adminLoggedIn) {
+        alert("Administrator access required.");
+        return;
+    }
+
+    const name =
+        document.getElementById("leagueName")
+        .value.trim();
+
+    const season =
+        document.getElementById("leagueSeason")
+        .value.trim();
+
+    if (!name) {
+        alert("Please enter a league name.");
+        return;
+    }
+
+    const league = {
+
+        id: Date.now(),
+
+        name: name,
+
+        season: season || "Season 1",
+
+        teams: [],
+
+        matches: []
+
+    };
+
+    database.leagues.push(league);
+
+    currentLeagueId = league.id;
+
+    saveDatabase();
+
+    document.getElementById("leagueName").value = "";
+
+    document.getElementById("leagueSeason").value = "";
+
+    render();
+}
+
+
+/* =========================================================
+   ADD TEAM
+========================================================= */
+
+function addTeam() {
+
+    if (!adminLoggedIn) {
+        alert("Administrator access required.");
+        return;
+    }
+
+    const league = getCurrentLeague();
+
+    if (!league) {
+        alert("Create a league first.");
+        return;
+    }
+
+    const name =
+        document.getElementById("teamName")
+        .value.trim();
+
+    const manager =
+        document.getElementById("teamManager")
+        .value.trim();
+
+    if (!name) {
+        alert("Enter a team name.");
+        return;
+    }
+
+    if (
+        league.teams.some(
+            team =>
+                team.name.toLowerCase() ===
+                name.toLowerCase()
+        )
+    ) {
+        alert("This team already exists.");
+        return;
+    }
+
+    league.teams.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        manager: manager || "Unknown"
+
+    });
+
+    saveDatabase();
+
+    document.getElementById("teamName").value = "";
+
+    document.getElementById("teamManager").value = "";
+
+    render();
+}
+
+
+/* =========================================================
+   ADD RESULT
+========================================================= */
+
+function addResult() {
+
+    if (!adminLoggedIn) {
+        alert("Administrator access required.");
+        return;
+    }
+
+    const league = getCurrentLeague();
+
+    if (!league) {
+        alert("Create a league first.");
+        return;
+    }
+
+    const homeId =
+        Number(
+            document.getElementById("homeTeam").value
+        );
+
+    const awayId =
+        Number(
+            document.getElementById("awayTeam").value
+        );
+
+    const homeScore =
+        Number(
+            document.getElementById("homeScore").value
+        );
+
+    const awayScore =
+        Number(
+            document.getElementById("awayScore").value
+        );
+
+    const date =
+        document.getElementById("matchDate").value;
+
+    if (!homeId || !awayId) {
+        alert("Select both teams.");
+        return;
+    }
+
+    if (homeId === awayId) {
+        alert("A team cannot play against itself.");
+        return;
+    }
+
+    if (
+        document.getElementById("homeScore").value === "" ||
+        document.getElementById("awayScore").value === ""
+    ) {
+        alert("Enter both scores.");
+        return;
+    }
+
+    league.matches.push({
+
+        id: Date.now(),
+
+        homeId,
+
+        awayId,
+
+        homeScore,
+
+        awayScore,
+
+        date:
+            date ||
+            new Date()
+                .toISOString()
+                .split("T")[0]
+
+    });
+
+    saveDatabase();
+
+    document.getElementById("homeScore").value = "";
+
+    document.getElementById("awayScore").value = "";
+
+    render();
+}
+
+
+/* =========================================================
+   STANDINGS
+========================================================= */
+
+function calculateStandings(league) {
+
+    const table = {};
+
+    league.teams.forEach(team => {
+
+        table[team.id] = {
+
+            id: team.id,
+
+            name: team.name,
+
+            manager: team.manager,
+
+            played: 0,
+
+            wins: 0,
+
+            draws: 0,
+
+            losses: 0,
+
+            gf: 0,
+
+            ga: 0,
+
+            gd: 0,
+
+            points: 0
+
+        };
+
+    });
+
+
+    league.matches.forEach(match => {
+
+        const home =
+            table[match.homeId];
+
+        const away =
+            table[match.awayId];
+
+        if (!home || !away) return;
+
+        home.played++;
+
+        away.played++;
+
+        home.gf += match.homeScore;
+
+        home.ga += match.awayScore;
+
+        away.gf += match.awayScore;
+
+        away.ga += match.homeScore;
+
+
+        if (
+            match.homeScore >
+            match.awayScore
+        ) {
+
+            home.wins++;
+
+            away.losses++;
+
+            home.points += 3;
+
+        }
+
+        else if (
+            match.homeScore <
+            match.awayScore
+        ) {
+
+            away.wins++;
+
+            home.losses++;
+
+            away.points += 3;
+
+        }
+
+        else {
+
+            home.draws++;
+
+            away.draws++;
+
+            home.points++;
+
+            away.points++;
+
+        }
+
+    });
+
+
+    Object.values(table).forEach(team => {
+
+        team.gd =
+            team.gf - team.ga;
+
+    });
+
+
+    return Object.values(table).sort(
+        (a, b) => {
+
+            if (b.points !== a.points)
+                return b.points - a.points;
+
+            if (b.gd !== a.gd)
+                return b.gd - a.gd;
+
+            if (b.gf !== a.gf)
+                return b.gf - a.gf;
+
+            return a.name.localeCompare(
+                b.name
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+function renderTabs() {
+
+    const container =
+        document.getElementById("leagueTabs");
+
+    container.innerHTML = "";
+
+    database.leagues.forEach(league => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "tab " +
+            (
+                league.id === currentLeagueId
+                    ? "active"
+                    : ""
+            );
+
+        button.innerHTML =
+            `${escapeHTML(league.name)}
+             <small>(${escapeHTML(league.season)})</small>`;
+
+        button.onclick = () => {
+
+            currentLeagueId =
+                league.id;
+
+            render();
+        };
+
+        container.appendChild(button);
+
+    });
+}
+
+
+/* =========================================================
+   STANDINGS DISPLAY
+========================================================= */
+
+function renderStandings(league) {
+
+    const body =
+        document.getElementById(
+            "standingsBody"
+        );
+
+    body.innerHTML = "";
+
+    if (
+        !league ||
+        !league.teams.length
+    ) {
+
+        body.innerHTML = `
+            <tr>
+                <td colspan="10"
+                    class="empty">
+                    No teams have been added yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    const standings =
+        calculateStandings(league);
+
+
+    standings.forEach(
+        (team, index) => {
+
+            const row =
+                document.createElement("tr");
+
+            if (index === 0) {
+                row.classList.add(
+                    "champion"
+                );
+            }
+
+            row.innerHTML = `
+
+                <td class="position">
+                    ${index + 1}
+                </td>
+
+                <td>
+                    ${escapeHTML(team.name)}
+                    <br>
+
+                    <small
+                        style="color:#6f7d9e;">
+                        ${escapeHTML(
+                            team.manager
+                        )}
+                    </small>
+                </td>
+
+                <td>${team.played}</td>
+
+                <td>${team.wins}</td>
+
+                <td>${team.draws}</td>
+
+                <td>${team.losses}</td>
+
+                <td>${team.gf}</td>
+
+                <td>${team.ga}</td>
+
+                <td>
+                    ${
+                        team.gd > 0
+                            ? "+"
+                            : ""
+                    }${team.gd}
+                </td>
+
+                <td>
+                    <strong>
+                        ${team.points}
+                    </strong>
+                </td>
+            `;
+
+            body.appendChild(row);
+        }
+    );
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+function renderResults(league) {
+
+    const container =
+        document.getElementById(
+            "resultsList"
+        );
+
+    container.innerHTML = "";
+
+    if (
+        !league ||
+        !league.matches.length
+    ) {
+
+        container.innerHTML = `
+            <div class="empty">
+                No match results yet.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    [...league.matches]
+        .reverse()
+        .forEach(match => {
+
+            const home =
+                league.teams.find(
+                    team =>
+                        team.id ===
+                        match.homeId
+                );
+
+            const away =
+                league.teams.find(
+                    team =>
+                        team.id ===
+                        match.awayId
+                );
+
+            if (!home || !away)
+                return;
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className = "match";
+
+            div.innerHTML = `
+
+                <div class="match-top">
+
+                    <span>
+                        ${escapeHTML(
+                            match.date
+                        )}
+                    </span>
+
+                    <span>
+                        DLS 26
+                    </span>
+
+                </div>
+
+                <div class="score">
+
+                    ${escapeHTML(
+                        home.name
+                    )}
+
+                    &nbsp;
+
+                    ${match.homeScore}
+
+                    -
+
+                    ${match.awayScore}
+
+                    &nbsp;
+
+                    ${escapeHTML(
+                        away.name
+                    )}
+
+                </div>
+
+            `;
+
+            container.appendChild(div);
+
+        });
+}
+
+
+/* =========================================================
+   TEAM LIST
+========================================================= */
+
+function renderTeams(league) {
+
+    const container =
+        document.getElementById(
+            "teamList"
+        );
+
+    container.innerHTML = "";
+
+    if (
+        !league ||
+        !league.teams.length
+    ) {
+
+        container.innerHTML = `
+            <div class="empty">
+                No teams added.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    league.teams.forEach(team => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+        card.className =
+            "league-card";
+
+        card.innerHTML = `
+
+            <div>
+
+                <h3>
+                    ${escapeHTML(
+                        team.name
+                    )}
+                </h3>
+
+                <small>
+                    Manager:
+                    ${escapeHTML(
+                        team.manager
+                    )}
+                </small>
+
+            </div>
+
+            <button
+                class="danger"
+                onclick="removeTeam(${team.id})">
+
+                Remove
+
+            </button>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+}
+
+
+/* =========================================================
+   TEAM SELECTORS
+========================================================= */
+
+function renderTeamSelectors(league) {
+
+    const home =
+        document.getElementById(
+            "homeTeam"
+        );
+
+    const away =
+        document.getElementById(
+            "awayTeam"
+        );
+
+    home.innerHTML =
+        `<option value="">
+            Home team
+        </option>`;
+
+    away.innerHTML =
+        `<option value="">
+            Away team
+        </option>`;
+
+
+    if (!league)
+        return;
+
+
+    league.teams.forEach(team => {
+
+        home.innerHTML += `
+            <option value="${team.id}">
+                ${escapeHTML(
+                    team.name
+                )}
+            </option>
+        `;
+
+        away.innerHTML += `
+            <option value="${team.id}">
+                ${escapeHTML(
+                    team.name
+                )}
+            </option>
+        `;
+
+    });
+}
+
+
+/* =========================================================
+   DASHBOARD STATS
+========================================================= */
+
+function renderStats(league) {
+
+    document.getElementById(
+        "teamCount"
+    ).textContent =
+        league
+            ? league.teams.length
+            : 0;
+
+    document.getElementById(
+        "matchCount"
+    ).textContent =
+        league
+            ? league.matches.length
+            : 0;
+
+
+    if (!league) {
+
+        document.getElementById(
+            "leaderName"
+        ).textContent = "-";
+
+        document.getElementById(
+            "leaderPoints"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    const standings =
+        calculateStandings(league);
+
+
+    if (!standings.length) {
+
+        document.getElementById(
+            "leaderName"
+        ).textContent = "-";
+
+        document.getElementById(
+            "leaderPoints"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "leaderName"
+    ).textContent =
+        standings[0].name;
+
+    document.getElementById(
+        "leaderPoints"
+    ).textContent =
+        standings[0].points;
+}
+
+
+/* =========================================================
+   REMOVE TEAM
+========================================================= */
+
+function removeTeam(teamId) {
+
+    if (!adminLoggedIn) {
+        alert(
+            "Administrator access required."
+        );
+        return;
+    }
+
+    const league =
+        getCurrentLeague();
+
+    if (!league)
+        return;
+
+    const team =
+        league.teams.find(
+            t => t.id === teamId
+        );
+
+    if (!team)
+        return;
+
+
+    if (!confirm(
+        `Remove ${team.name}? Existing matches involving this team will also be removed.`
+    )) {
+        return;
+    }
+
+
+    league.teams =
+        league.teams.filter(
+            t => t.id !== teamId
+        );
+
+    league.matches =
+        league.matches.filter(
+            match =>
+                match.homeId !== teamId &&
+                match.awayId !== teamId
+        );
+
+    saveDatabase();
+
+    render();
+}
+
+
+/* =========================================================
+   DELETE CURRENT LEAGUE
+========================================================= */
+
+function deleteCurrentLeague() {
+
+    if (!adminLoggedIn) {
+        alert(
+            "Administrator access required."
+        );
+        return;
+    }
+
+    const league =
+        getCurrentLeague();
+
+    if (!league) {
+
+        alert(
+            "There is no league to delete."
+        );
+
+        return;
+    }
+
+
+    if (!confirm(
+        `Delete ${league.name}?`
+    )) {
+        return;
+    }
+
+
+    database.leagues =
+        database.leagues.filter(
+            l => l.id !== league.id
+        );
+
+
+    currentLeagueId =
+        database.leagues.length
+            ? database.leagues[0].id
+            : null;
+
+    saveDatabase();
+
+    render();
+}
+
+
+/* =========================================================
+   CLEAR EVERYTHING
+========================================================= */
+
+function clearEverything() {
+
+    if (!adminLoggedIn) {
+        alert(
+            "Administrator access required."
+        );
+        return;
+    }
+
+    if (!confirm(
+        "This will delete ALL leagues, teams and results. Continue?"
+    )) {
+        return;
+    }
+
+
+    database = {
+        leagues: []
+    };
+
+    currentLeagueId = null;
+
+    saveDatabase();
+
+    render();
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
+
+
+/* =========================================================
+   MAIN RENDER
+========================================================= */
+
+function render() {
+
+    renderTabs();
+
+    const league =
+        getCurrentLeague();
+
+    renderStats(league);
+
+    renderStandings(league);
+
+    renderResults(league);
+
+    renderTeams(league);
+
+    renderTeamSelectors(league);
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+render();
+
+</script>
+
+</body>
+</html>
